@@ -185,11 +185,10 @@ while check update value =
 
 whileRight :: (a -> Either b a) -> a -> b
 whileRight f x = todo
---whileRight f x = 
 --    if isRight (f x)
---        then whileRight f (f x)
+--        then whileRight f f (x)
 --    else
- --       x
+--        x
 
 
 -- for the whileRight examples:
