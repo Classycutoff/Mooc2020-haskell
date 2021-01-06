@@ -185,10 +185,11 @@ while check update value =
 
 whileRight :: (a -> Either b a) -> a -> b
 whileRight f x = todo
+--whileRight f x = 
 --    if isRight (f x)
---        then whileRight f f (x)
+--        then whileRight f (fromRight 0 (f x))
 --    else
---        x
+--        fromLeft 0 (f x)
 
 
 -- for the whileRight examples:
@@ -208,7 +209,11 @@ step k x = if x<k then Right (2*x) else Left x
 -- Hint! This is a great use for list comprehensions
 
 joinToLength :: Int -> [String] -> [String]
-joinToLength = todo
+joinToLength num lst = filter (\x -> length x == num) (joinToLength' lst lst)
+
+joinToLength' [] _ = []
+joinToLength' red org = map (\x -> head red ++ x) org ++ joinToLength' (tail red) org
+
 
 ------------------------------------------------------------------------------
 -- Ex 10: implement the operator +|+ that returns a list with the first
@@ -222,6 +227,12 @@ joinToLength = todo
 --   [] +|+ [True]        ==> [True]
 --   [] +|+ []            ==> []
 
+
+(+|+) :: [a] -> [a] -> [a]
+[] +|+ [] = []
+[] +|+ xs = [head xs]
+ys +|+ [] = [head ys]
+ys +|+ xs = head ys : [head xs]
 
 ------------------------------------------------------------------------------
 -- Ex 11: remember the lectureParticipants example from Lecture 2? We
@@ -238,7 +249,12 @@ joinToLength = todo
 --   sumRights [Left "bad!", Left "missing"]         ==>  0
 
 sumRights :: [Either a Int] -> Int
-sumRights = todo
+sumRights [] = 0
+sumRights xs = 
+    if isRight (head xs)
+        then fromRight 1 (head xs) + sumRights (tail xs)
+    else
+        sumRights (tail xs)
 
 ------------------------------------------------------------------------------
 -- Ex 12: recall the binary function composition operation
@@ -254,7 +270,8 @@ sumRights = todo
 --   multiCompose [(3*), (2^), (+1)] 0 ==> 6
 --   multiCompose [(+1), (2^), (3*)] 0 ==> 2
 
-multiCompose fs = todo
+multiCompose [] start = start
+multiCompose func start = (head func . multiCompose (tail func)) start 
 
 ------------------------------------------------------------------------------
 -- Ex 13: let's consider another way to compose multiple functions. Given
@@ -273,7 +290,14 @@ multiCompose fs = todo
 --   multiApp reverse [tail, take 2, reverse] "foo" ==> ["oof","fo","oo"]
 --   multiApp concat [take 3, reverse] "race" ==> "racecar"
 
-multiApp = todo
+multiApp func xs y = todo
+--multiApp func [] y = func y
+--multiApp func xs y = 
+--    if length xs == 1
+--        then (head xs) y
+--    else
+--        (head xs . multiApp (tail xs) y) y
+ 
 
 ------------------------------------------------------------------------------
 -- Ex 14: in this exercise you get to implement an interpreter for a
